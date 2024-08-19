@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do List</title>
+    <link rel="stylesheet" href="/static/styles/style.css" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="todo_app">
+            <h2>To-Do List<img src="/static/images/icon.png" alt="Description"></h2>
+            <form action="/add" method="post">
+            <div class="row">
+                <input type="text" name="newTask" id="input_box" placeholder="Add your text">
+                <button type="submit" onclick="added()">Add</button>
+            </div>
+            </form>         
+            <ul id="list-container">
+                <!-- <li class="checked">Task 1</li>
+                <li>Task 2</li>
+                <li>Task 3</li> -->
+            </ul>
+        </div>
+    </div>
+    <script>
+        let newTask=document.getElementById('input_box');
+        // console.log(newTask);
+        // localStorage.setItem('TaskList',JSON.stringify(newTask))
+        // const storedData=JSON.parse(localStorage.getItem('TaskList'));
+        // console.log('storedData :',storedData);
+        let listContainer=document.getElementById('list-container')
+        
+    
+        function added(){
+            if(newTask.value===''){
+    
+                Toast.fire({
+                    text: "You must write something"
+                });
+            }else{
+
+    
+                Toast.fire({
+                    text: "New Task added"
+                });
+                let li=document.createElement('li')
+                li.innerHTML=newTask.value;
+                listContainer.appendChild(li)
+                let span=document.createElement('span')
+                span.innerHTML="\u00d7";
+                li.appendChild(span)
+            }
+            newTask.value=''
+            saveData()
+    
+        }
+        listContainer.addEventListener('click',function(e) {
+            if(e.target.tagName==='LI'){
+                e.target.classList.toggle('checked');
+    
+                Toast.fire({
+                    text: "Task Completed"
+                });
+                saveData()
+            }else if(e.target.tagName==='SPAN'){
+                e.target.parentElement.remove();
+    
+                Toast.fire({
+                    text: "Task Removed"
+                });
+                saveData();
+            }
+        },false)
+
+        function saveData(){
+            localStorage.setItem('data',listContainer.innerHTML)
+        }
+        function showTask() {
+            listContainer.innerHTML=localStorage.getItem('data')
+        }
+
+
+        const Toast = Swal.mixin({
+                    toast: true,
+                    position: "bottom",
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-toast',
+                        title: 'swal-toast-title'
+                    },
+                    didOpen: (toast) => {
+                        toast.style.backgroundColor = "black";
+                        toast.style.color = "white";
+                        toast.style.fontSize = "13px";
+                    }
+                });
+
+        showTask()
+        
+    </script>
+</body>
+</html>
